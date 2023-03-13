@@ -1,108 +1,190 @@
-# 12 SQL: Employee Tracker
+# 13 Object-Relational Mapping (ORM): E-Commerce Back End
 
 ## Your Task
 
-Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called **content management systems (CMS)**. Your assignment this week is to build a command-line application from scratch to manage a company's employee database, using Node.js, Inquirer, and MySQL.
+Internet retail, also known as **e-commerce**, is the largest sector of the electronics industry, generating an estimated $29 trillion in 2019. E-commerce platforms like Shopify and WooCommerce provide a suite of services to businesses of all sizes. Due to their prevalence, understanding the fundamental architecture of these platforms will benefit you as a full-stack web developer.
 
-Because this Challenge will require the use of the `Inquirer` package, ensure that you install and use Inquirer version 8.2.4. To do so, use the following command in your project folder: `npm i inquirer@8.2.4`.
+Your task is to build the back end for an e-commerce site by modifying starter code. You’ll configure a working Express.js API to use Sequelize to interact with a MySQL database.
 
-Because this application won’t be deployed, you’ll also need to create a walkthrough video that demonstrates its functionality and all of the following acceptance criteria being met. You’ll need to submit a link to the video and add it to the README of your project.
+Because this application won’t be deployed, you’ll also need to provide a link to a walkthrough video that demonstrates its functionality and all of the acceptance criteria being met. You’ll need to submit a link to the video and add it to the readme of your project.
 
 ## User Story
 
 ```md
-AS A business owner
-I WANT to be able to view and manage the departments, roles, and employees in my company
-SO THAT I can organize and plan my business
+AS A manager at an internet retail company
+I WANT a back end for my e-commerce website that uses the latest technologies
+SO THAT my company can compete with other e-commerce companies
 ```
 
 ## Acceptance Criteria
 
 ```md
-GIVEN a command-line application that accepts user input
-WHEN I start the application
-THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
-WHEN I choose to view all departments
-THEN I am presented with a formatted table showing department names and department ids
-WHEN I choose to view all roles
-THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
-WHEN I choose to view all employees
-THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
-WHEN I choose to add a department
-THEN I am prompted to enter the name of the department and that department is added to the database
-WHEN I choose to add a role
-THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
-WHEN I choose to add an employee
-THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-WHEN I choose to update an employee role
-THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+GIVEN a functional Express.js API
+WHEN I add my database name, MySQL username, and MySQL password to an environment variable file
+THEN I am able to connect to a database using Sequelize
+WHEN I enter schema and seed commands
+THEN a development database is created and is seeded with test data
+WHEN I enter the command to invoke the application
+THEN my server is started and the Sequelize models are synced to the MySQL database
+WHEN I open API GET routes in Insomnia for categories, products, or tags
+THEN the data for each of these routes is displayed in a formatted JSON
+WHEN I test API POST, PUT, and DELETE routes in Insomnia
+THEN I am able to successfully create, update, and delete data in my database
 ```
 
 ## Mock-Up
 
-The following video shows an example of the application being used from the command line:
+The following animation shows the application's GET routes to return all categories, all products, and all tags being tested in Insomnia:
 
-[![A video thumbnail shows the command-line employee management application with a play button overlaying the view.](./Assets/12-sql-homework-video-thumbnail.png)](https://2u-20.wistia.com/medias/2lnle7xnpk)
+![In Insomnia, the user tests “GET tags,” “GET Categories,” and “GET All Products.”.](./Assets/13-orm-homework-demo-01.gif)
+
+The following animation shows the application's GET routes to return a single category, a single product, and a single tag being tested in Insomnia:
+
+![In Insomnia, the user tests “GET tag by id,” “GET Category by ID,” and “GET One Product.”](./Assets/13-orm-homework-demo-02.gif)
+
+The following animation shows the application's POST, PUT, and DELETE routes for categories being tested in Insomnia:
+
+![In Insomnia, the user tests “DELETE Category by ID,” “CREATE Category,” and “UPDATE Category.”](./Assets/13-orm-homework-demo-03.gif)
+
+Your walkthrough video should also show the POST, PUT, and DELETE routes for products and tags being tested in Insomnia.
 
 ## Getting Started
 
 This Challenge will require a video submission. Refer to the [Fullstack Blog Video Submission Guide](https://coding-boot-camp.github.io/full-stack/computer-literacy/video-submission-guide) for additional guidance on creating a video.
 
-You’ll need to use the [MySQL2 package](https://www.npmjs.com/package/mysql2) to connect to your MySQL database and perform queries, the [Inquirer package](https://www.npmjs.com/package/inquirer/v/8.2.4) to interact with the user via the command line, and the [console.table package](https://www.npmjs.com/package/console.table) to print MySQL rows to the console.
+You’ll need to use the [MySQL2](https://www.npmjs.com/package/mysql2) and [Sequelize](https://www.npmjs.com/package/sequelize) packages to connect your Express.js API to a MySQL database and the [dotenv](https://www.npmjs.com/package/dotenv) package to use environment variables to store sensitive data.
 
-**Important**: You will be committing a file that contains your database credentials. Make sure that your MySQL password is not used for any other personal accounts, because it will be visible on GitHub. In upcoming lessons, you will learn how to better secure this password, or you can start researching npm packages now that could help you.
+Use the `schema.sql` file in the `db` folder to create your database with MySQL shell commands. Use environment variables to store sensitive data like your MySQL username, password, and database name.
 
-You might also want to make your queries asynchronous. MySQL2 exposes a `.promise()` function on Connections to upgrade an existing non-Promise connection to use Promises. To learn more and make your queries asynchronous, refer to the [npm documentation on MySQL2](https://www.npmjs.com/package/mysql2).
+### Database Models
 
-Design the database schema as shown in the following image:
+Your database should contain the following four models, including the requirements listed for each model:
 
-![Database schema includes tables labeled “employee,” role,” and “department.”](./Assets/12-sql-homework-demo-01.png)
+* `Category`
 
-As the image illustrates, your schema should contain the following three tables:
+  * `id`
 
-* `department`
+    * Integer.
+  
+    * Doesn't allow null values.
+  
+    * Set as primary key.
+  
+    * Uses auto increment.
 
-    * `id`: `INT PRIMARY KEY`
+  * `category_name`
+  
+    * String.
+  
+    * Doesn't allow null values.
 
-    * `name`: `VARCHAR(30)` to hold department name
+* `Product`
 
-* `role`
+  * `id`
+  
+    * Integer.
+  
+    * Doesn't allow null values.
+  
+    * Set as primary key.
+  
+    * Uses auto increment.
 
-    * `id`: `INT PRIMARY KEY`
+  * `product_name`
+  
+    * String.
+  
+    * Doesn't allow null values.
 
-    * `title`: `VARCHAR(30)` to hold role title
+  * `price`
+  
+    * Decimal.
+  
+    * Doesn't allow null values.
+  
+    * Validates that the value is a decimal.
 
-    * `salary`: `DECIMAL` to hold role salary
+  * `stock`
+  
+    * Integer.
+  
+    * Doesn't allow null values.
+  
+    * Set a default value of `10`.
+  
+    * Validates that the value is numeric.
 
-    * `department_id`: `INT` to hold reference to department role belongs to
+  * `category_id`
+  
+    * Integer.
+  
+    * References the `Category` model's `id`.
 
-* `employee`
+* `Tag`
 
-    * `id`: `INT PRIMARY KEY`
+  * `id`
+  
+    * Integer.
+  
+    * Doesn't allow null values.
+  
+    * Set as primary key.
+  
+    * Uses auto increment.
 
-    * `first_name`: `VARCHAR(30)` to hold employee first name
+  * `tag_name`
+  
+    * String.
 
-    * `last_name`: `VARCHAR(30)` to hold employee last name
+* `ProductTag`
 
-    * `role_id`: `INT` to hold reference to employee role
+  * `id`
 
-    * `manager_id`: `INT` to hold reference to another employee that is the manager of the current employee (`null` if the employee has no manager)
+    * Integer.
 
-You might want to use a separate file that contains functions for performing specific SQL queries you'll need to use. A constructor function or class could be helpful for organizing these. You might also want to include a `seeds.sql` file to pre-populate your database, making the development of individual features much easier.
+    * Doesn't allow null values.
 
-## Bonus
+    * Set as primary key.
 
-Try to add some additional functionality to your application, such as the ability to do the following:
+    * Uses auto increment.
 
-* Update employee managers.
+  * `product_id`
 
-* View employees by manager.
+    * Integer.
 
-* View employees by department.
+    * References the `Product` model's `id`.
 
-* Delete departments, roles, and employees.
+  * `tag_id`
 
-* View the total utilized budget of a department&mdash;in other words, the combined salaries of all employees in that department.
+    * Integer.
+
+    * References the `Tag` model's `id`.
+
+### Associations
+
+You'll need to execute association methods on your Sequelize models to create the following relationships between them:
+
+* `Product` belongs to `Category`, and `Category` has many `Product` models, as a category can have multiple products but a product can only belong to one category.
+
+* `Product` belongs to many `Tag` models, and `Tag` belongs to many `Product` models. Allow products to have multiple tags and tags to have many products by using the `ProductTag` through model.
+
+> **Hint:** Make sure you set up foreign key relationships that match the column we created in the respective models.
+
+### Fill Out the API Routes to Perform RESTful CRUD Operations
+
+Fill out the unfinished routes in `product-routes.js`, `tag-routes.js`, and `category-routes.js` to perform create, read, update, and delete operations using your Sequelize models.
+
+Note that the functionality for creating the many-to-many relationship for products has already been completed for you.
+
+> **Hint**: Be sure to look at the mini-project code for syntax help and use your model's column definitions to figure out what `req.body` will be for POST and PUT routes!
+
+### Seed the Database
+
+After creating the models and routes, run `npm run seed` to seed data to your database so that you can test your routes.
+
+### Sync Sequelize to the Database on Server Start
+
+Create the code needed in `server.js` to sync the Sequelize models to the MySQL database on server start.
 
 ## Grading Requirements
 
@@ -116,33 +198,43 @@ Try to add some additional functionality to your application, such as the abilit
 >
 > * A repository that only includes starter code
 
-This Challenge is graded based on the following criteria:
+This Challenge is graded based on the following criteria: 
 
 ### Deliverables: 10%
 
-* Your GitHub repository containing your application code.
+* The GitHub repository containing your application code.
 
-### Walkthrough Video: 27%
+### Walkthrough Video: 37%
 
-* A walkthrough video that demonstrates the functionality of the employee tracker must be submitted, and a link to the video should be included in your README file.
+* A walkthrough video that demonstrates the functionality of the e-commerce back end must be submitted, and a link to the video should be included in your readme file.
 
 * The walkthrough video must show all of the technical acceptance criteria being met.
 
-* The walkthrough video must demonstrate how a user would invoke the application from the command line.
+* The walkthrough video must demonstrate how to create the schema from the MySQL shell.
 
-* The walkthrough video must demonstrate a functional menu with the options outlined in the acceptance criteria.
+* The walkthrough video must demonstrate how to seed the database from the command line.
+
+* The walkthrough video must demonstrate how to start the application’s server.
+
+* The walkthrough video must demonstrate GET routes for all categories, all products, and all tags being tested in Insomnia.
+
+* The walkthrough video must demonstrate GET routes for a single category, a single product, and a single tag being tested in Insomnia.
+
+* The walkthrough video must demonstrate POST, PUT, and DELETE routes for categories, products, and tags being tested in Insomnia.
 
 ### Technical Acceptance Criteria: 40%
 
 * Satisfies all of the preceding acceptance criteria plus the following:
 
-    * Uses the [Inquirer package](https://www.npmjs.com/package/inquirer/v/8.2.4).
+  * Connects to a MySQL database using the [MySQL2](https://www.npmjs.com/package/mysql) and [Sequelize](https://www.npmjs.com/package/sequelize) packages.
 
-    * Uses the [MySQL2 package](https://www.npmjs.com/package/mysql2) to connect to a MySQL database.
+  * Stores sensitive data, like a user’s MySQL username, password, and database name, using environment variables through the [dotenv](https://www.npmjs.com/package/dotenv) package.
 
-    * Uses the [console.table package](https://www.npmjs.com/package/console.table) to print MySQL rows to the console.
+  * Syncs Sequelize models to a MySQL database on the server start.
 
-* Follows the table schema outlined in the Challenge instructions.
+  * Includes column definitions for all four models outlined in the Challenge instructions.
+
+  * Includes model associations outlined in the Challenge instructions.
 
 ### Repository Quality: 13%
 
@@ -154,33 +246,15 @@ This Challenge is graded based on the following criteria:
 
 * Repository contains multiple descriptive commit messages.
 
-* Repository contains a high-quality README with description and a link to a walkthrough video.
-
-### Application Quality 10%
-
-* The application user experience is intuitive and easy to navigate.
-
-### Bonus
-
-Fulfilling any of the following can add up to 20 points to your grade. Note that the highest grade you can achieve is still 100:
-
-* Application allows users to update employee managers (2 points).
-
-* Application allows users to view employees by manager (2 points).
-
-* Application allows users to view employees by department (2 points).
-
-* Application allows users to delete departments, roles, and employees (2 points for each).
-
-* Application allows users to view the total utilized budget of a department&mdash;in other words, the combined salaries of all employees in that department (8 points).
+* Repository contains quality readme with description and a link to a walkthrough video.
 
 ## Review
 
 You are required to submit BOTH of the following for review:
 
-* A walkthrough video demonstrating the functionality of the application.
+* A walkthrough video demonstrating the functionality of the application and all of the acceptance criteria being met.
 
-* The URL of the GitHub repository, with a unique name and a README describing the project.
+* The URL of the GitHub repository. Give the repository a unique name and include a readme describing the project.
 
-- - -
+---
 © 2022 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
