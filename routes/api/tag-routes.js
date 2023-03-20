@@ -45,23 +45,13 @@ router.get("/:id", (req, res) => {
 
 router.post("/", (req, res) => {
   // create a new tag
-  Tag.create(req.body)
-    .then((tag) => {
-      if (req.body.productIds.length) {
-        const tagIdArr = req.body.productIds.map((product_id) => {
-          return {
-            product_id,
-            tag_id: tag.id,
-          };
-        });
-        return ProductTag.bulkCreate(tagIdArr);
-      }
-      res.status(200).json(tag);
-    })
-    .then((tagIds) => res.status(200).json(tagIds))
+  Tag.create({
+    tag_name: req.body.tag_name,
+  })
+    .then((dbTagData) => res.json(dbTagData))
     .catch((err) => {
       console.log(err);
-      res.status(400).json(err);
+      res.status(500).json(err);
     });
 });
 
