@@ -79,6 +79,7 @@ router.put("/:id", (req, res) => {
       return Promise.all([ProductTag.destroy({ where: { id: productTagsToRemove } }), ProductTag.bulkCreate(newProductTags)]);
     })
     .then((updatedProductTags) => res.json(updatedProductTags))
+
     .catch((err) => {
       res.status(400).json(err);
     });
